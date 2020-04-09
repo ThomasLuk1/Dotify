@@ -1,2 +1,6 @@
 # Dotify
-Music Player app for info 448
+Music Player App for INFO 448
+
+No Extra Credit Attempted
+
+![](images/screenshot.png)
