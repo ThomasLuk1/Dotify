@@ -8,7 +8,6 @@ import com.ericchee.songdataprovider.Song
 import com.ericchee.songdataprovider.SongDataProvider
 import com.tluk.dotify.fragment.NowPlayingFragment
 import com.tluk.dotify.R
-import com.tluk.dotify.SongListAdapter
 import com.tluk.dotify.fragment.OnSongClickListener
 import com.tluk.dotify.fragment.SongListFragment
 
@@ -51,12 +50,14 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
 
     override fun onSongSelected(song: Song) {
         var nowPlayingFragment = getNowPlayingFragment()
+
         if  (nowPlayingFragment == null) {
             nowPlayingFragment = NowPlayingFragment()
             val argumentBundle = Bundle().apply {
                 putParcelable(NowPlayingFragment.ARG_SONG, song)
             }
             nowPlayingFragment.arguments = argumentBundle
+
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragContainer, nowPlayingFragment, NowPlayingFragment.TAG)

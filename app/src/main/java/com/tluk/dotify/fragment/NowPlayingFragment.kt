@@ -85,9 +85,9 @@ class NowPlayingFragment : Fragment() {
 
     private fun updateSongViews() {
         song?.let {
-            tvTitle.text = song.title
-            tvArtist.text = "${song.artist}"
-            ivCover.setImageResource(song.largeImageID)
+            tvTitle.text = it.title
+            tvArtist.text = "${it.artist}"
+            ivCover.setImageResource(it.largeImageID)
             tvNumberOfPlays.text = numPlays.toString()
         }
     }
