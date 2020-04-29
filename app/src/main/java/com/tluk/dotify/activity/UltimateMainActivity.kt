@@ -2,6 +2,7 @@ package com.tluk.dotify.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.ericchee.songdataprovider.Song
 import com.ericchee.songdataprovider.SongDataProvider
 import com.tluk.dotify.fragment.NowPlayingFragment
@@ -14,7 +15,7 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ultimate_main)
-
+        Log.i("Info", "THIS IS CREATED")
         if (getNowPlayingFragment() == null) {
             val songListFragment = SongListFragment()
             val listOfSongs: ArrayList<Song> = SongDataProvider.getAllSongs() as ArrayList<Song>
@@ -34,6 +35,9 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
             } else {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            }
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                nowPlayingBar.visibility = View.VISIBLE
             }
         }
 
@@ -56,6 +60,7 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
                     nowPlayingFragment.updateSong(currSong)
                 }
             }
+            nowPlayingBar.visibility = View.INVISIBLE
         }
 
         btnShuffle.setOnClickListener {
@@ -75,7 +80,6 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
         tvCurrentSong.text = "${song.title} - ${song.artist}"
         this.song = song
     }
-
 }
 
 interface OnSongClickListener {

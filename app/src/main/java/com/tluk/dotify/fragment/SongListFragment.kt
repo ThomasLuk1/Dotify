@@ -17,7 +17,6 @@ class SongListFragment : Fragment() {
     private lateinit var songAdapter: SongListAdapter
     private var onSongClickListener: OnSongClickListener? = null
     private lateinit var listOfSongs: MutableList<Song>
-    private var currSong: Song? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,10 +55,6 @@ class SongListFragment : Fragment() {
         songAdapter.onSongClickListener = { song ->
             onSongClickListener?.onSongClicked(song)
         }
-    }
-
-    fun getCurrSong(): Song? {
-        return currSong
     }
 
     fun shuffleList() {

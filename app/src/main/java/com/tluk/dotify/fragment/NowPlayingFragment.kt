@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.ivCover
 import kotlinx.android.synthetic.main.activity_main.tvArtist
 import kotlinx.android.synthetic.main.activity_main.tvNumberOfPlays
 import kotlinx.android.synthetic.main.activity_main.tvTitle
+import kotlinx.android.synthetic.main.activity_ultimate_main.*
 import kotlinx.android.synthetic.main.fragment_song_detail.*
 import kotlin.random.Random
 
@@ -67,7 +68,6 @@ class NowPlayingFragment : Fragment() {
                 tvNumberOfPlays.text = numPlays.toString()
             }
         }
-
         btnPlay.setOnClickListener { btnPlay: View ->
             numPlays = numPlays.plus(1)
             tvNumberOfPlays.text = numPlays.toString()
