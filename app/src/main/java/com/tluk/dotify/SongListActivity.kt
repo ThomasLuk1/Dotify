@@ -1,3 +1,4 @@
+/*
 package com.tluk.dotify
 
 import android.content.Intent
@@ -34,4 +35,4 @@ class SongListActivity : AppCompatActivity() {
     }
 
 }
-
+*/

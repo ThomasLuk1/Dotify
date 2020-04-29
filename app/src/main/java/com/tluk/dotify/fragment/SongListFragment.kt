@@ -9,16 +9,15 @@ import android.view.ViewGroup
 import com.ericchee.songdataprovider.Song
 import com.tluk.dotify.R
 import com.tluk.dotify.SongListAdapter
-import com.tluk.dotify.fragment.NowPlayingFragment.Companion.ARG_SONG
+import com.tluk.dotify.activity.OnSongClickListener
 import kotlinx.android.synthetic.main.activity_song_list.*
 
 class SongListFragment : Fragment() {
 
     private lateinit var songAdapter: SongListAdapter
-
     private var onSongClickListener: OnSongClickListener? = null
     private lateinit var listOfSongs: MutableList<Song>
-    private lateinit var currSong: Song
+    private var currSong: Song? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,20 +54,13 @@ class SongListFragment : Fragment() {
         rvSongList.adapter = songAdapter
 
         songAdapter.onSongClickListener = { song ->
-            tvCurrentSong.text = song.title + " - " + song.artist
-            currSong = song
-        }
-
-        nowPlayingBar.setOnClickListener {
-                onSongClickListener?.onSongSelected(currSong)
-
-        }
-
-        btnShuffle.setOnClickListener {
-            shuffleList()
+            onSongClickListener?.onSongClicked(song)
         }
     }
 
+    fun getCurrSong(): Song? {
+        return currSong
+    }
 
     fun shuffleList() {
         val newSongList = listOfSongs.apply {
@@ -84,6 +76,3 @@ class SongListFragment : Fragment() {
     }
 }
 
-interface OnSongClickListener {
-    fun onSongSelected(song: Song)
-}

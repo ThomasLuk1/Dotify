@@ -35,7 +35,6 @@ class NowPlayingFragment : Fragment() {
         outState.putInt(NUM_PLAYS, numPlays)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

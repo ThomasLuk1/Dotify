@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     android:layout_margin="30dp"
     android:background="#FFFFFF"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
     tools:context=".MainActivity">
 
     <ImageView
