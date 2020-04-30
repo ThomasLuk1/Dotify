@@ -1,7 +1,6 @@
 package com.tluk.dotify.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.ericchee.songdataprovider.Song
 import com.tluk.dotify.R
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.btnBack
 import kotlinx.android.synthetic.main.activity_main.btnNext
 import kotlinx.android.synthetic.main.activity_main.btnPlay
@@ -17,8 +15,6 @@ import kotlinx.android.synthetic.main.activity_main.ivCover
 import kotlinx.android.synthetic.main.activity_main.tvArtist
 import kotlinx.android.synthetic.main.activity_main.tvNumberOfPlays
 import kotlinx.android.synthetic.main.activity_main.tvTitle
-import kotlinx.android.synthetic.main.activity_ultimate_main.*
-import kotlinx.android.synthetic.main.fragment_song_detail.*
 import kotlin.random.Random
 
 class NowPlayingFragment : Fragment() {
@@ -68,16 +64,16 @@ class NowPlayingFragment : Fragment() {
                 tvNumberOfPlays.text = numPlays.toString()
             }
         }
-        btnPlay.setOnClickListener { btnPlay: View ->
+        btnPlay.setOnClickListener {
             numPlays = numPlays.plus(1)
             tvNumberOfPlays.text = numPlays.toString()
         }
 
-        btnNext.setOnClickListener { btnNext: View ->
+        btnNext.setOnClickListener {
             Toast.makeText(context, "Skipping to next track", Toast.LENGTH_SHORT).show()
         }
 
-        btnBack.setOnClickListener { btnNext: View ->
+        btnBack.setOnClickListener {
             Toast.makeText(context, "Skipping to previous track", Toast.LENGTH_SHORT).show()
         }
     }

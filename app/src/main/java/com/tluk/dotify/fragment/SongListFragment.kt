@@ -2,6 +2,7 @@ package com.tluk.dotify.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,8 @@ class SongListFragment : Fragment() {
 
         arguments?.let { args ->
             val listOfSongs = args.getParcelableArrayList<Song>(ARG_LIST)
+            Log.i("info", "CREATED")
+            Log.i("info", listOfSongs.toString())
             if (listOfSongs != null) {
                 this.listOfSongs = listOfSongs.toMutableList()
             }
@@ -38,6 +41,7 @@ class SongListFragment : Fragment() {
         }
         songAdapter = SongListAdapter(listOfSongs)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

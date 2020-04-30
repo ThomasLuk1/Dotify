@@ -12,23 +12,30 @@ import kotlinx.android.synthetic.main.activity_ultimate_main.*
 
 class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
     private var song: Song? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ultimate_main)
-        Log.i("Info", "THIS IS CREATED")
+
+        lateinit var songListFragment: SongListFragment
+
         if (getNowPlayingFragment() == null) {
-            val songListFragment = SongListFragment()
+            songListFragment = SongListFragment()
             val listOfSongs: ArrayList<Song> = SongDataProvider.getAllSongs() as ArrayList<Song>
             val argumentBundle = Bundle().apply {
                 putParcelableArrayList(SongListFragment.ARG_LIST, listOfSongs)
             }
             songListFragment.arguments = argumentBundle
-
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragContainer, songListFragment)
                 .commit()
         }
+
+        btnShuffle.setOnClickListener {
+            songListFragment.shuffleList()
+        }
+
         supportFragmentManager.addOnBackStackChangedListener {
             val hasBackStack = supportFragmentManager.backStackEntryCount > 0
             if (hasBackStack) {
@@ -63,10 +70,6 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
             nowPlayingBar.visibility = View.INVISIBLE
         }
 
-        btnShuffle.setOnClickListener {
-            var songListFragment = SongListFragment()
-            songListFragment.shuffleList()
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
