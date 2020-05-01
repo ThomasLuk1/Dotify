@@ -13,38 +13,51 @@ import kotlinx.android.synthetic.main.activity_ultimate_main.*
 class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
     private var song: Song? = null
 
+    companion object {
+        const val CURR_SONG = "CURR_SONG"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ultimate_main)
+        val listOfSongs: ArrayList<Song> = ArrayList(SongDataProvider.getAllSongs())
 
-        lateinit var songListFragment: SongListFragment
+        var hasBackStack = supportFragmentManager.backStackEntryCount > 0
+        if (hasBackStack) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            nowPlayingBar.visibility = View.GONE
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            nowPlayingBar.visibility = View.VISIBLE
+        }
+        supportFragmentManager.addOnBackStackChangedListener {
+            hasBackStack = supportFragmentManager.backStackEntryCount > 0
+            if (hasBackStack) {
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                nowPlayingBar.visibility = View.GONE
+            } else {
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                nowPlayingBar.visibility = View.VISIBLE
+            }
+        }
 
-        if (getNowPlayingFragment() == null) {
-            songListFragment = SongListFragment()
-            val listOfSongs: ArrayList<Song> = SongDataProvider.getAllSongs() as ArrayList<Song>
+
+        if (supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG) == null) {
             val argumentBundle = Bundle().apply {
                 putParcelableArrayList(SongListFragment.ARG_LIST, listOfSongs)
             }
+            val songListFragment = SongListFragment()
             songListFragment.arguments = argumentBundle
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragContainer, songListFragment)
+                .add(R.id.fragContainer, songListFragment, SongListFragment.TAG)
                 .commit()
         }
 
         btnShuffle.setOnClickListener {
-            songListFragment.shuffleList()
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            val hasBackStack = supportFragmentManager.backStackEntryCount > 0
-            if (hasBackStack) {
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            } else {
-                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            }
-            if (supportFragmentManager.backStackEntryCount == 0) {
-                nowPlayingBar.visibility = View.VISIBLE
+            val songListFragment = getSongListFragment()
+            if (songListFragment != null) {
+                songListFragment.shuffleList()
             }
         }
 
@@ -67,7 +80,11 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
                     nowPlayingFragment.updateSong(currSong)
                 }
             }
-            nowPlayingBar.visibility = View.INVISIBLE
+        }
+        if (savedInstanceState != null) {
+            with(savedInstanceState) {
+                tvCurrentSong.text = getString(CURR_SONG)
+            }
         }
 
     }
@@ -77,11 +94,20 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
         return super.onNavigateUp()
     }
 
+    private fun getSongListFragment() = supportFragmentManager.findFragmentByTag(SongListFragment.TAG) as? SongListFragment
+
     private fun getNowPlayingFragment() = supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG) as? NowPlayingFragment
 
     override fun onSongClicked(song: Song) {
         tvCurrentSong.text = "${song.title} - ${song.artist}"
         this.song = song
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString(CURR_SONG, tvCurrentSong.text.toString())
     }
 }
 

@@ -12,12 +12,19 @@ import com.tluk.dotify.R
 import com.tluk.dotify.SongListAdapter
 import com.tluk.dotify.activity.OnSongClickListener
 import kotlinx.android.synthetic.main.activity_song_list.*
+import kotlinx.android.synthetic.main.activity_ultimate_main.*
 
 class SongListFragment : Fragment() {
 
     private lateinit var songAdapter: SongListAdapter
     private var onSongClickListener: OnSongClickListener? = null
     private lateinit var listOfSongs: MutableList<Song>
+
+    companion object {
+        val TAG = SongListFragment::class.java.simpleName
+        const val ARG_LIST = "ARG_LIST"
+        const val ARG_SHUFFLED_LIST = "ARG_SHUFFLED_LIST"
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,15 +37,24 @@ class SongListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let { args ->
-            val listOfSongs = args.getParcelableArrayList<Song>(ARG_LIST)
-            Log.i("info", "CREATED")
-            Log.i("info", listOfSongs.toString())
-            if (listOfSongs != null) {
-                this.listOfSongs = listOfSongs.toMutableList()
+        if (savedInstanceState != null) {
+            with(savedInstanceState) {
+                val oldList = getParcelableArrayList<Song>(ARG_SHUFFLED_LIST)?.toMutableList()
+                if (oldList != null) {
+                    listOfSongs = oldList
+                    Log.i("info", listOfSongs.toString())
+                }
             }
-
+        } else {
+            Log.i("info", "no save")
+            arguments?.let { args ->
+                val listOfSongs = args.getParcelableArrayList<Song>(ARG_LIST)
+                if (listOfSongs != null) {
+                    this.listOfSongs = listOfSongs.toMutableList()
+                }
+            }
         }
+
         songAdapter = SongListAdapter(listOfSongs)
     }
 
@@ -53,7 +69,6 @@ class SongListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        songAdapter = SongListAdapter(listOfSongs)
         rvSongList.adapter = songAdapter
 
         songAdapter.onSongClickListener = { song ->
@@ -61,17 +76,21 @@ class SongListFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putParcelableArrayList(ARG_SHUFFLED_LIST, ArrayList(listOfSongs))
+
+    }
+
     fun shuffleList() {
-        val newSongList = listOfSongs.apply {
+        listOfSongs = listOfSongs.apply {
             shuffle()
         }
-        songAdapter.change(newSongList)
+        songAdapter.change(listOfSongs)
         rvSongList.adapter = songAdapter
     }
 
 
-    companion object {
-        const val ARG_LIST = "ARG_LIST"
-    }
 }
 
