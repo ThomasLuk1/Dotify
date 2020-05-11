@@ -1,4 +1,4 @@
-package com.tluk.dotify
+package com.tluk.dotify.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +7,7 @@ import kotlin.random.Random
 import android.view.View
 import android.widget.Toast
 import com.ericchee.songdataprovider.Song
+import com.tluk.dotify.R
 
 class MainActivity : AppCompatActivity() {
 

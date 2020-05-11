@@ -3,11 +3,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.ericchee.songdataprovider.Song
-import com.ericchee.songdataprovider.SongDataProvider
+import com.tluk.dotify.DotifyApp
 import com.tluk.dotify.fragment.NowPlayingFragment
 import com.tluk.dotify.R
 import com.tluk.dotify.fragment.SongListFragment
+import com.tluk.dotify.model.Song
 import kotlinx.android.synthetic.main.activity_ultimate_main.*
 
 class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
@@ -20,7 +20,25 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ultimate_main)
-        val listOfSongs: ArrayList<Song> = ArrayList(SongDataProvider.getAllSongs())
+        val musicManager = (this.applicationContext as DotifyApp).musicManager
+        var listOfSongs = ArrayList<Song>()
+        musicManager.getMusicLibrary({ musicLibrary ->
+            Log.i("info", "There are ${musicLibrary.numOfSongs} songs.")
+            listOfSongs = ArrayList(musicLibrary.songs)
+            if (supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG) == null) {
+                val argumentBundle = Bundle().apply {
+                    putParcelableArrayList(SongListFragment.ARG_LIST, listOfSongs)
+                }
+                val songListFragment = SongListFragment()
+                songListFragment.arguments = argumentBundle
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.fragContainer, songListFragment, SongListFragment.TAG)
+                    .commit()
+            }
+        }, {
+            Log.i("info", "error fetching songs")
+        })
 
         var hasBackStack = supportFragmentManager.backStackEntryCount > 0
         if (hasBackStack) {
@@ -41,19 +59,6 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
             }
         }
 
-
-        if (supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG) == null) {
-            val argumentBundle = Bundle().apply {
-                putParcelableArrayList(SongListFragment.ARG_LIST, listOfSongs)
-            }
-            val songListFragment = SongListFragment()
-            songListFragment.arguments = argumentBundle
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragContainer, songListFragment, SongListFragment.TAG)
-                .commit()
-        }
-
         btnShuffle.setOnClickListener {
             val songListFragment = getSongListFragment()
             if (songListFragment != null) {
@@ -69,6 +74,7 @@ class UltimateMainActivity : AppCompatActivity(), OnSongClickListener {
                     nowPlayingFragment = NowPlayingFragment()
                     val argumentBundle = Bundle().apply {
                         putParcelable(NowPlayingFragment.ARG_SONG, currSong)
+                        putParcelableArrayList(NowPlayingFragment.ARG_LIST, listOfSongs)
                     }
                     nowPlayingFragment.arguments = argumentBundle
                     supportFragmentManager

@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.ericchee.songdataprovider.Song
+import com.tluk.dotify.model.Song
+import com.squareup.picasso.Picasso
 
 class SongListAdapter(private val initialListOfSongs: List<Song>): RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
 
@@ -41,8 +42,7 @@ class SongListAdapter(private val initialListOfSongs: List<Song>): RecyclerView.
         fun bind(song: Song) {
             tvSongName.text = song.title
             tvSongArtist.text = song.artist
-            ivSongImage.setImageResource(song.smallImageID)
-
+            Picasso.get().load(song.smallImageURL).into(ivSongImage)
             itemView.setOnClickListener {
                 onSongClickListener?.invoke(song)
             }
